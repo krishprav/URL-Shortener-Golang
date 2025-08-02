@@ -1,0 +1,36 @@
+|-- README.md
+|-- go.mod
+|-- main.go
+|-- url-shortener-go
+    |-- public
+    |-- eslint.config.mjs
+    |-- .gitignore
+    |-- next-env.d.ts
+    |-- next.config.ts
+    |-- postcss.config.mjs
+    |-- README.md
+    |-- tsconfig.json
+    |-- src
+        |-- app
+            |-- favicon.ico
+            |-- globals.css
+            |-- layout.tsx
+            |-- page.tsx
+            |-- api
+                |-- shorten
+                    |-- route.ts
+        |-- components
+            |-- UrlShortener.tsx
+            |-- ResultDisplay.tsx
+            |-- InfoPopup.tsx
+            |-- ErrorBoundary.tsx
+            |-- InteractiveStars.tsx
+            |-- MacOSWindow.tsx
+    |-- package.json
+    |-- package-lock.json
+    |-- .env.local
+|-- Dockerfile
+|-- .dockerignore
+|-- render.yaml
+|-- .env.local
+|-- .gitignore
