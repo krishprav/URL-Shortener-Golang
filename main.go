@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"sync"
 )
@@ -34,14 +35,37 @@ func generateShortURL() (string, error) {
 }
 
 // Put stores a URL and returns its short version
-func (s *URLStore) Put(url string) (string, error) {
-	shortURL, err := generateShortURL()
-	if err != nil {
-		return "", err
+func (s *URLStore) Put(longURL string) (string, error) {
+	// Generate short URL with collision detection
+	var shortURL string
+	var err error
+
+	// Try up to 10 times to generate a unique short URL
+	for i := 0; i < 10; i++ {
+		shortURL, err = generateShortURL()
+		if err != nil {
+			return "", err
+		}
+
+		s.mu.RLock()
+		_, exists := s.urls[shortURL]
+		s.mu.RUnlock()
+
+		if !exists {
+			break
+		}
+	}
+
+	// If we still have a collision after 10 attempts, return error
+	s.mu.RLock()
+	_, exists := s.urls[shortURL]
+	s.mu.RUnlock()
+	if exists {
+		return "", fmt.Errorf("failed to generate unique short URL after 10 attempts")
 	}
 
 	s.mu.Lock()
-	s.urls[shortURL] = url
+	s.urls[shortURL] = longURL
 	s.mu.Unlock()
 
 	return shortURL, nil
@@ -55,25 +79,33 @@ func (s *URLStore) Get(shortURL string) (string, bool) {
 	return url, exists
 }
 
+// isValidURL checks if a string is a valid URL
+func isValidURL(urlStr string) bool {
+	_, err := url.ParseRequestURI(urlStr)
+	return err == nil
+}
+
 func main() {
 	store := NewURLStore()
 
 	baseURL := os.Getenv("BASE_URL")
 	if baseURL == "" {
-		baseURL = "https://url-shortener-golang.onrender.com"
+		baseURL = "http://localhost:8080"
 	}
 
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/shorten", func(w http.ResponseWriter, r *http.Request) {
-		// CORS headers for every response
+		// CORS headers
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusOK)
 			return
 		}
+
 		if r.Method != http.MethodPost {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			fmt.Fprint(w, "Method not allowed")
@@ -84,6 +116,13 @@ func main() {
 		if longURL == "" {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprint(w, "URL is required")
+			return
+		}
+
+		// Validate URL
+		if !isValidURL(longURL) {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, "Invalid URL format")
 			return
 		}
 
@@ -98,16 +137,32 @@ func main() {
 	})
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// CORS headers for every response
+		// CORS headers
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusOK)
 			return
 		}
+
 		if r.URL.Path == "/" {
-			http.ServeFile(w, r, "index.html")
+			// Serve a simple HTML page instead of looking for index.html
+			w.Header().Set("Content-Type", "text/html")
+			fmt.Fprint(w, `<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortener</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h1>URL Shortener API</h1>
+    <p>This is the backend API for the URL shortener service.</p>
+    <p>Use the frontend application to shorten URLs.</p>
+</body>
+</html>`)
 			return
 		}
 
@@ -122,18 +177,6 @@ func main() {
 		http.Redirect(w, r, longURL, http.StatusMovedPermanently)
 	})
 
-	// CORS middleware wraps the mux
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-		mux.ServeHTTP(w, r)
-	})
-
 	// Get port from environment variable or use default
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -141,5 +184,5 @@ func main() {
 	}
 
 	fmt.Printf("Server starting on :%s\n", port)
-	log.Fatal(http.ListenAndServe(":"+port, handler))
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }

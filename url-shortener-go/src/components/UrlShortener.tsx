@@ -40,21 +40,33 @@ export default function UrlShortener() {
     setError('')
 
     try {
-      const response = await fetch('/api/shorten', {
+      // Call Go backend directly instead of Next.js API route
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080'
+      
+      const formData = new FormData()
+      formData.append('url', url.trim())
+      
+      const response = await fetch(`${backendUrl}/shorten`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url.trim() })
+        body: formData
       })
 
-      const data = await response.json()
-
       if (response.ok) {
-        setShortUrl(data.shortUrl)
-        // Save to localStorage for persistence
-        localStorage.setItem('lastShortUrl', data.shortUrl)
-        localStorage.setItem('lastOriginalUrl', url)
+        const text = await response.text()
+        const match = text.match(/https?:\/\/[^\s]+/)
+        const shortUrl = match ? match[0] : ''
+        
+        if (shortUrl && isValidUrl(shortUrl)) {
+          setShortUrl(shortUrl)
+          // Save to localStorage for persistence
+          localStorage.setItem('lastShortUrl', shortUrl)
+          localStorage.setItem('lastOriginalUrl', url)
+        } else {
+          setError('Invalid response from URL shortening service')
+        }
       } else {
-        setError(data.error || 'Failed to shorten URL')
+        const errorText = await response.text()
+        setError(errorText || 'Failed to shorten URL')
       }
     } catch (err) {
       console.error('Network error:', err)

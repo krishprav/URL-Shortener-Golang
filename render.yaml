@@ -8,4 +8,13 @@ services:
       - key: PORT
         value: 8080
       - key: BASE_URL
-        generateValue: true 
+        value: https://url-shortener-golang.onrender.com
+
+  - type: web
+    name: url-shortener-frontend
+    env: node
+    buildCommand: cd url-shortener-go && npm install && npm run build
+    startCommand: cd url-shortener-go && npm start
+    envVars:
+      - key: NEXT_PUBLIC_BACKEND_URL
+        value: https://url-shortener-golang.onrender.com 

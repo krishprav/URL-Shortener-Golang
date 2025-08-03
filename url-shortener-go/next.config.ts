@@ -44,6 +44,13 @@ const nextConfig: NextConfig = {
 
   // Powered by header
   poweredByHeader: false,
+
+  // Webpack configuration
+  webpack(config) {
+    config.resolve.extensions.push('.ts', '.tsx');
+    return config;
+  },
 };
+
 
 export default nextConfig;
