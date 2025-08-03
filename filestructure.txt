@@ -17,6 +17,7 @@
             |-- page.tsx
             |-- api
                 |-- shorten
+                    |-- route.ts
         |-- components
             |-- UrlShortener.tsx
             |-- ResultDisplay.tsx
