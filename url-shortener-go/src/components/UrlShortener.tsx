@@ -40,26 +40,31 @@ export default function UrlShortener() {
     setError('')
 
     try {
-      // Call Go backend directly instead of Next.js API route
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080'
+      // Get backend URL from environment variable or use default
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://url-shortener-golang.onrender.com'
       
+      // Create FormData to match your Go backend's expected format
       const formData = new FormData()
       formData.append('url', url.trim())
       
+      // Call Go backend directly
       const response = await fetch(`${backendUrl}/shorten`, {
         method: 'POST',
         body: formData
       })
 
       if (response.ok) {
-        const text = await response.text()
-        const match = text.match(/https?:\/\/[^\s]+/)
-        const shortUrl = match ? match[0] : ''
+        const result = await response.text()
         
-        if (shortUrl && isValidUrl(shortUrl)) {
-          setShortUrl(shortUrl)
+        // Extract the short URL from the response text
+        // The Go backend returns "Short URL: {baseURL}/{shortCode}"
+        const shortUrlMatch = result.match(/Short URL: (.+)/)
+        const extractedShortUrl = shortUrlMatch ? shortUrlMatch[1] : result
+        
+        if (extractedShortUrl && isValidUrl(extractedShortUrl)) {
+          setShortUrl(extractedShortUrl)
           // Save to localStorage for persistence
-          localStorage.setItem('lastShortUrl', shortUrl)
+          localStorage.setItem('lastShortUrl', extractedShortUrl)
           localStorage.setItem('lastOriginalUrl', url)
         } else {
           setError('Invalid response from URL shortening service')
@@ -285,4 +290,4 @@ export default function UrlShortener() {
       {showInfo && <InfoPopup onClose={() => setShowInfo(false)} />}
     </div>
   )
-} 
+}
