@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ForwardedRef, forwardRef } from "react";
+import React, { forwardRef } from "react";
 
 interface MacOSWindowProps {
   title?: string;

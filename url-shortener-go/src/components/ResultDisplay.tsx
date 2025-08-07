@@ -8,7 +8,6 @@ interface ResultDisplayProps {
 
 export default function ResultDisplay({ shortUrl }: ResultDisplayProps) {
   const [copied, setCopied] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
 
   const copyToClipboard = async () => {
     try {
@@ -46,8 +45,6 @@ export default function ResultDisplay({ shortUrl }: ResultDisplayProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-400 hover:text-blue-300 transition-colors font-medium break-all sm:break-words flex-1 mr-0 sm:mr-4 text-sm sm:text-base"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
               >
                 {shortUrl}
               </a>
