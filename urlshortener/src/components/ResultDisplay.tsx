@@ -112,4 +112,4 @@ export default function ResultDisplay({ shortUrl }: ResultDisplayProps) {
       </div>
     </div>
   )
-} 
+}

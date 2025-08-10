@@ -53,4 +53,4 @@ const MacOSWindow = forwardRef<HTMLDivElement, MacOSWindowProps>(
 
 MacOSWindow.displayName = "MacOSWindow";
 
-export default MacOSWindow; 
+export default MacOSWindow;

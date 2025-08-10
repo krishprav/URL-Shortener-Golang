@@ -41,7 +41,7 @@ export default function UrlShortener() {
 
     try {
       // Get backend URL from environment variable or use default
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://url-shortener-golang.onrender.com'
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://url-shortener-golang.onrender.com'
       
       // Create FormData to match your Go backend's expected format
       const formData = new FormData()
