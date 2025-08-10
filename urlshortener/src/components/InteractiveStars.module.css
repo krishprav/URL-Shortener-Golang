@@ -1,0 +1,142 @@
+.container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, #050510, #0a0a1a, #080815);
+  transition: transform 0.2s ease-out;
+  transform: translate(
+    var(--translate-x, 0),
+    var(--translate-y, 0)
+  );
+}
+
+/* Star base styles */
+.star {
+  position: absolute;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  transition: transform 0.4s ease-out;
+  pointer-events: none;
+  will-change: transform, opacity;
+  left: 0;
+  top: 0;
+}
+
+/* Star type variations */
+.starRegular {
+  background-color: white;
+  box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.8);
+}
+
+.starNebula {
+  background-color: rgba(147, 197, 253, 0.3);
+  filter: blur(0.5px);
+  box-shadow: 0 0 15px 2px rgba(147, 197, 253, 0.4);
+}
+
+.starParticle {
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 5px 0.5px rgba(255, 255, 255, 0.6);
+}
+
+/* Dynamic star sizing */
+.star[data-size="small"] { width: 1px; height: 1px; }
+.star[data-size="medium"] { width: 2px; height: 2px; }
+.star[data-size="large"] { width: 3px; height: 3px; }
+.star[data-size="xlarge"] { width: 4px; height: 4px; }
+
+/* Dynamic opacity */
+.star[data-opacity="low"] { opacity: 0.3; }
+.star[data-opacity="medium"] { opacity: 0.6; }
+.star[data-opacity="high"] { opacity: 0.9; }
+
+/* Animation delays */
+.delay0 { animation-delay: 0s; }
+.delay1 { animation-delay: 0.2s; }
+.delay2 { animation-delay: 0.4s; }
+.delay3 { animation-delay: 0.6s; }
+.delay4 { animation-delay: 0.8s; }
+.delay5 { animation-delay: 1s; }
+
+/* Size classes */
+.sizeSmall { width: 1px; height: 1px; }
+.sizeMedium { width: 2px; height: 2px; }
+.sizeLarge { width: 3px; height: 3px; }
+.sizeXLarge { width: 4px; height: 4px; }
+
+/* Opacity classes */
+.opacityLow { opacity: 0.3; }
+.opacityMedium { opacity: 0.6; }
+.opacityHigh { opacity: 0.9; }
+
+/* Position classes */
+.positioned {
+  position: absolute;
+  left: var(--position-x, 0);
+  top: var(--position-y, 0);
+  transform: var(--transform, none);
+  transition: transform 0.4s ease-out;
+}
+
+/* Background with transform */
+.background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, #050510, #0a0a1a, #080815);
+  transform: var(--transform, none);
+  transition: transform 0.2s ease-out;
+}
+
+.starParticle {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.starRegular {
+  background-color: white;
+}
+
+.cosmicOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(6, 182, 212, 0.05);
+}
+
+.glowEffect1 {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 16rem;
+  height: 16rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  border-radius: 50%;
+  filter: blur(48px);
+  animation: pulse 4s infinite;
+}
+
+.glowEffect2 {
+  position: absolute;
+  bottom: 25%;
+  right: 25%;
+  width: 12rem;
+  height: 12rem;
+  background-color: rgba(168, 85, 247, 0.1);
+  border-radius: 50%;
+  filter: blur(32px);
+  animation: pulse 5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
