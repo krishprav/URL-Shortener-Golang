@@ -2,22 +2,15 @@
 |-- go.mod
 |-- main.go
 |-- url-shortener-go
-    |-- public
     |-- eslint.config.mjs
     |-- .gitignore
-    |-- next-env.d.ts
-    |-- next.config.ts
-    |-- postcss.config.mjs
     |-- README.md
     |-- tsconfig.json
     |-- src
         |-- app
             |-- globals.css
-            |-- layout.tsx
             |-- page.tsx
-            |-- api
-                |-- shorten
-                    |-- route.ts
+            |-- layout.tsx
         |-- components
             |-- UrlShortener.tsx
             |-- ResultDisplay.tsx
@@ -25,13 +18,43 @@
             |-- ErrorBoundary.tsx
             |-- InteractiveStars.tsx
             |-- MacOSWindow.tsx
-    |-- package.json
-    |-- package-lock.json
     |-- .env.local
     |-- tsconfig.tsbuildinfo
+    |-- next-env.d.ts
+    |-- package.json
+    |-- postcss.config.mjs
+    |-- next.config.ts
+    |-- package-lock.json
 |-- Dockerfile
 |-- .dockerignore
 |-- render.yaml
 |-- .env.local
 |-- .gitignore
 |-- main
+|-- url-shortener-react
+    |-- eslint.config.js
+    |-- index.html
+    |-- public
+        |-- vite.svg
+    |-- README.md
+    |-- src
+        |-- App.tsx
+        |-- assets
+            |-- react.svg
+        |-- index.css
+        |-- main.tsx
+        |-- vite-env.d.ts
+        |-- components
+            |-- UrlShortener.tsx
+            |-- InfoPopup.tsx
+            |-- ResultDisplay.tsx
+    |-- tsconfig.app.json
+    |-- tsconfig.json
+    |-- tsconfig.node.json
+    |-- vite.config.ts
+    |-- .gitignore
+    |-- package.json
+    |-- package-lock.json
+    |-- .env.local
+    |-- tailwind.config.js
+    |-- postcss.config.js
